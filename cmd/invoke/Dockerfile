@@ -1,6 +1,6 @@
 FROM golang:1.12-stretch as build
 
-WORKDIR /invoke
+WORKDIR /job-runner
 COPY . .
 RUN go build ./cmd/invoke
 RUN cp invoke /usr/local/bin
