@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/yaronha/job-runner/pkg/common"
 	"github.com/yaronha/job-runner/pkg/invoker"
+	"io/ioutil"
 	"os"
 )
 
@@ -18,8 +19,8 @@ func main() {
 
 func Run() error {
 
-	address := flag.String("a", "PUT", "HTTP Method")
-	method := flag.String("m", "PUT", "HTTP Method")
+	address := flag.String("a", "", "function address (URL)")
+	method := flag.String("m", "", "HTTP Method")
 	logLevel := flag.String("l", "info", "log level: info | debug")
 	message := flag.String("b", "", "message body")
 	flag.Parse()
@@ -42,6 +43,10 @@ func Run() error {
 
 	task := &invoker.TaskRequest{Sequence: int64(i), Body: []byte(*message)}
 	msg, err := c.Submit(task)
+	if err != nil {
+		return err
+	}
+	err = ioutil.WriteFile("/tmp/output", msg.Body, 0644)
 	if err != nil {
 		return err
 	}
